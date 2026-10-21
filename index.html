@@ -92,7 +92,6 @@
       </div>
     </header>
 
-    <!-- NAVEGACIÓN PRINCIPAL REDUCIDA -->
     <nav class="panel rounded-lg mb-4 overflow-x-auto">
       <div class="flex min-w-max">
         <button class="nav-tab is-active px-4 md:px-5 py-3.5 font-semibold text-sm" data-tab="irrigation">Irrigation & Mixing</button>
@@ -102,7 +101,7 @@
     </nav>
 
     <main>
-      <!-- VISTA 1: IRRIGATION & MIXING (INCLUYE PREMIUM Y CLEAN DENTRO DE LOS SUB-PROGRAMAS) -->
+      <!-- VISTA 1: IRRIGATION & MIXING -->
       <section id="view-irrigation" class="view is-active">
         <div class="panel rounded-lg p-4 md:p-5">
           <p class="eyebrow mb-1">OPERATING PROTOCOL</p>
@@ -116,7 +115,6 @@
             <button class="prog-btn button-secondary choice text-xs" data-program="clean">Clean Schedule</button>
           </div>
 
-          <!-- SELECTOR DE SEMANA PARA PREMIUM Y CLEAN -->
           <div id="program-week-container" class="hidden flex flex-wrap items-center gap-3 mb-4 bg-[#111712] p-3 rounded border border-[#344237]">
             <div>
               <label class="block text-xs mb-1 text-white">Select Week</label>
@@ -206,7 +204,7 @@
         </div>
       </section>
 
-      <!-- VISTA 3: MOTHERS & CLONES (AL FINAL) -->
+      <!-- VISTA 3: MOTHERS & CLONES -->
       <section id="view-mothers" class="view">
         <div class="panel rounded-lg p-4 md:p-5">
           <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
@@ -297,19 +295,24 @@
       "11": { period: "Flush - Final Week (pH 6.2)", reg: "0.15 ml/L", allinonepro: "1 gr/L", breakout: "-", kboost: "-", foliarStart: "-", foliarTop: "-" }
     };
 
-    const DEFAULT_PLANTS = [];
-
     let activeProgram = 'mothers';
     let completedSteps = new Set();
-    let plants = DEFAULT_PLANTS;
+    let plants = [];
 
+    // Limpieza forzada de localStorage si contenía los datos de ejemplo antiguos
     try {
       let stored = localStorage.getItem('cannaflos_plants');
       if (stored) {
         let parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) plants = parsed;
+        // Si detecta los ejemplos por defecto antiguos, los borra automáticamente
+        if (Array.isArray(parsed) && parsed.some(p => p.batchId === "BATCH-101")) {
+          plants = [];
+          localStorage.removeItem('cannaflos_plants');
+        } else if (Array.isArray(parsed) && parsed.length > 0) {
+          plants = parsed;
+        }
       }
-    } catch(e) { plants = DEFAULT_PLANTS; }
+    } catch(e) { plants = []; }
 
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
@@ -587,7 +590,7 @@
           { order: "7", product: "Topbooster", dose: data.top }
         ].filter(i => i.dose !== "-");
       } else if (activeProgram === 'clean') {
-        const weekKey = document.getElementById('sub-week-select').value;
+        const weekKey = document.getElementById('sub-week-select'].value;
         const data = CLEAN_WEEKS[weekKey];
         items = [
           { order: "1", product: "Regulator", dose: data.reg },
