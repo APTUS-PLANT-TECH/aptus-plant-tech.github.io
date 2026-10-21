@@ -363,7 +363,7 @@
       document.getElementById('add-plant-btn').addEventListener('click', () => {
         plants.push({
           id: Date.now(),
-          batchId: '',
+          batchId: `BATCH-${Math.floor(100 + Math.random() * 900)}`,
           genetics: '',
           type: 'Mother',
           status: 'Rooting',
@@ -471,13 +471,14 @@
 
         prods.forEach((p, i) => {
           if (p.dose !== "-") {
+            const calc = (p.val * liters).toFixed(2);
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td class="font-bold text-[#ffb175]">${i+1}</td>
               <td class="font-semibold text-white">${p.name}</td>
               <td>${p.dose}</td>
-              <td>-</td>
-              <td class="text-xs text-[#a0ada0]">Premium Schedule Product</td>
+              <td>${liters} L</td>
+              <td class="text-xs text-[#a8da4d]">Calculated for ${liters}L: <b>${calc} ${p.unit}</b></td>
             `;
             tbody.appendChild(tr);
           }
@@ -498,13 +499,14 @@
 
         prods.forEach((p, i) => {
           if (p.dose !== "-") {
+            const calc = (p.val * liters).toFixed(2);
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td class="font-bold text-[#ffb175]">${i+1}</td>
               <td class="font-semibold text-white">${p.name}</td>
               <td>${p.dose}</td>
-              <td>-</td>
-              <td class="text-xs text-[#a0ada0]">Clean Schedule Product</td>
+              <td>${liters} L</td>
+              <td class="text-xs text-[#a8da4d]">Calculated for ${liters}L: <b>${calc} ${p.unit}</b></td>
             `;
             tbody.appendChild(tr);
           }
